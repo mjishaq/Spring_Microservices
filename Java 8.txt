@@ -1,0 +1,18 @@
+Java 8:
+Optional:
+isPresent will return boolean value whether value is present or not.
+ifPresent will execute statement inside it if value is present.
+orElse is used to display string if data does not matches.
+orElseGet()-> is used to execute lambda expression if data does not matches
+orElsethrow() to thorw an error.
+optional.of is used when you data is present
+optional.offnullable is used when data is not used.
+
+Lambda Interface:
+First we need to define interface with singe abstract method.
+Use that abstract method inside Implemented class.
+For Ex: Functional1Interface is interface class name and printhello is its method.
+private static void Functional1Interface() {
+		Functional1Interface abc = () -> System.out.println("hello I am in ");
+		abc.printHello();
+		

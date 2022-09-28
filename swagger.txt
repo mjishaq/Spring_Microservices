@@ -1,0 +1,23 @@
+https://howtodoinjava.com/swagger2/code-generation-for-rest-api/
+
+https://reflectoring.io/spring-boot-openapi/
+
+https://www.datasciencelearner.com/how-to-install-swagger-editor-and-ui-locally/#:~:text=How%20to%20Install%20Swagger%20Locally%3F%201%20Step%201%3A,Step%205%3A%20Run%20the%20Swagger%20Editor.%20More%20items
+Install Swagger Editor
+
+1) Install Node JS
+
+2) download swagger editor: https://swagger.io/tools/swagger-editor/download/
+
+3) You have to first install the Sever as localhost to run the Swagger Editor and UI. Open your command prompt and type the following command
+npm install -g http-server
+
+4) Install and Build the Source Code: Navigate to swagger directory and run below command.
+npm install
+
+5) npm start
+
+6) Generate code by going to Swagger Editor and generate Spring Server code.
+
+7) Modify business logic and run Application.
+

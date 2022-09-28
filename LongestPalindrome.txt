@@ -1,0 +1,86 @@
+class Solution {
+    public String longestPalindrome(String s) {
+        
+       Map objMap = new HashMap();
+       Map<Integer,StringBuffer>  finalMap= new HashMap();
+		StringBuffer finalString=null;
+		outerloop:
+		for(int i=0; i<s.length();i++) {
+			
+			objMap.clear();
+			for(int j=i;j<s.length();j++) {
+				
+                if(objMap!=null ) {
+				if(objMap.containsValue(s.charAt(j)) && objMap.get(i).equals(s.charAt(j))) {
+					
+				 finalString=	findIfPalindrome(objMap,i,j,s.charAt(j));
+				 if(finalString==null) {
+					// objMap.clear();
+					// continue;
+                     objMap.put(j,s.charAt(j));
+                     
+				 }else {
+					// break outerloop;
+                     finalMap.put(i, finalString);
+                     objMap.put(j,s.charAt(j));
+				 }
+					
+				}
+                }
+				objMap.put(j,s.charAt(j));	
+                
+				
+			}
+            // System.out.println("helo"+finalMap);
+            
+		}
+        
+        int size=0;
+		String result=null;
+		for (Map.Entry entry : finalMap.entrySet())   {
+			if(size==0) {
+			result=entry.getValue().toString();
+			size=result.length();
+			}else {
+				if(size < entry.getValue().toString().length()) {
+					result=entry.getValue().toString();
+					size=result.length();
+				}
+				
+			}
+			}
+       // System.out.println("helo"+result); 
+        if(s.equals("") || s.equals(" ")){
+            return "";
+        }
+        if(s.length()==1)
+            return s;
+        String s1="";
+       // System.out.println("helo"+result);
+        if(result!=null){
+           return result;
+        }else{
+            //String s=s.charAt(0)
+            return s.substring(0,1);
+        }
+        
+    }
+    
+    
+    private static StringBuffer findIfPalindrome(Map objMap, int start, int end, char c) {
+		StringBuffer sObj= new StringBuffer();
+		for(int i=start;i<end;i++) {
+			sObj.append(objMap.get(i));
+			
+			
+			
+		}
+		sObj.append(c);
+		if((sObj.toString()).equals(sObj.reverse().toString()))
+		return sObj;
+		
+		
+		return null;
+		
+	}
+}

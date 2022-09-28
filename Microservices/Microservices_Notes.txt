@@ -1,0 +1,277 @@
+Challanges of Microservies:
+1) When there are multiple microservices then its difficult for management team to manage those.
+Sol: Spring cloud provides config management which will be centralized and managed at one place.
+2) If currency system calls multiplse microservices to balance the load and get results. There may many instances which may get added in future or removed. So system which 
+is calling instances should know how many instances are there and which are up.
+Sol: Eureka naming server is used to manage all microservies and get its details. Ribbon Naming server is used at Client side load balancing. Feign is used at Rest clients.
+Fiegn is used in invoking other microservices.
+
+When we used Feign we need to hardcode url. But by using ribbon it will loadbalance multiple services by reading it from application.properties.
+currency-exchange-service.ribbon.listOfServers=http://localhost:8000,http://localhost:8001
+
+Now when we want to add one more exchange service then application.properties needs to be changed which would be maitenance headache.
+Eureka Naming server setup will resolve the issue. Currency Conversion service will ask naming server how many instances are available from exchange service and it will use it.
+
+To set up Eureka Naming Server.
+1) First we need to create microservice netfix-eureka-naming-server
+2) Add dependency for which we service we want to register. Like currency conversion service pom.xml we neeed to add eureka client denpendency.
+3) In currency conversion service we need to add annotation enable eureka discovery client @EnableDiscoveryClient which will help in scanning.
+4) In application.properties of currency conversion service we need to add 
+eureka.client.service-url.default-zone=http://localhost:8761/eureka
+
+3) Visibility and Monitoring: Lets say there are many microservices and if it is failing at one point then it would be difficult to trace the logs.
+Sol: Zipking Distributing Tracing will help in identifying the issues by assiging id to requests across componenets and it has many features like logging/monitoring.
+Netflix/Zull Api gateway is used for tracking.
+4) Fault Tolerence: If any service is down then whole system will come down.
+Sol: Hystrix can be used to configure default response when anything is down.
+
+Advantages:
+1) In monolithinc all are interconnected with same technology where as in microservices we can have different microservices with different technologies 
+and new microservices added can also come up with different processes as well.
+2)Dynamic scaling: Like amazon during peak time we can add more services and off time we can bring down services. Procure hardware and release it dynamically based on load with cloud.
+3)Faster Releases cycles
+
+
+Spring Boot:
+With below anotations spring will autodetect this classes  for dependency injection when annotation based configuration and class path scanning is used.
+For example you have maths class where you have add method. Now if we declare annotation @component above this call and create another class with main method and without
+creating any object just call this call and pass variables to methods then it auto detect this call and inject the variables into method and return the result.
+
+Note: Parameter used in @Component("mc") it will become alias name and it can be used context.getbean("mc") instead of class name.
+
+The @Component annotation marks a java class as a bean so the component-scanning mechanism of spring can pick it up and pull it into the application context. 
+@Repository: suitable annotation that provides additional benefits specifically for DAOs i.e. @Repository annotation. The @Repository annotation is a specialization of the
+ @Component annotation with similar use and functionality. In addition to importing the DAOs into the DI container, 
+it also makes the unchecked exceptions (thrown from DAO methods) eligible for translation into Spring DataAccessException.
+The @Service annotation is also a specialization of the component annotation. It doesn’t currently provide any additional behavior over the @Component annotation, but it’s a good idea to use @Service over @Component in service-layer classes because it specifies intent better. 
+Additionally, tool support and additional behavior might rely on it in the future.
+
+Service: Denotes that the class provides some services. Our utility classes can be marked as Service classes.
+Repository: This annotation indicates that the class deals with CRUD operations, usually it’s used with DAO implementations that deal with database tables.
+Controller: Mostly used with web applications or REST web services to specify that the class is a front controller and responsible to handle user request and return appropriate response.
+Note that all these four annotations are in package org.springframework.stereotype and part of spring-context jar.
+Most of the time our component classes will fall under one of its three specialized annotations, so you may not use @Component annotation a lot.
+
+@Autowired: Is used to get object of that particular bean. We can get rid of Setter methods.
+
+You can use Spring Cloud’s @EnableConfigServer to standup a config server that can communicate with other applications. This is a regular Spring Boot application with one annotation added to enable the config server.
+
+
+Bootstrap.properties:
+It's only used/needed if you're using Spring Cloud and your application's configuration is stored on a remote configuration server (e.g. Spring Cloud Config Server).
+It will be loaded before application.properties and in this file you can define spring cloud config server url from where you want to load data.
+
+
+Web: When we want to create web application or rest service we select Web.
+Devtools: It is used to automatically pick up changes.
+Actuator: It is used to monitor the application.
+Config Client: If we want to connect application to spring clound config server then config client is used.
+
+
+private Environment environment: Environment variable is used to get the port information which one is active with command environment.getProperty("local.server.port");
+
+@Id is used to defined primary key for hibernate database.
+@Entity :Entities in JPA are nothing but POJOs representing data that can be persisted to the database. An entity represents a table stored in a database. Every instance of an entity represents a row in the table.
+
+
+ResponseEntity<CurrencyConversionBean> responseEntity= new RestTemplate().getForEntity
+				("htpp://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrencyConversionBean.class,uriVariables);
+				ResTemplate is used to connect to other microservices.
+				UriVariables are used to replace parameters from/to from request.
+				
+				
+Zuul is used to log the informatin and use it as proxy or wall between two microservices so if you want you can filter then pass it.
+
+Sampler is used to trace all the requests.
+
+Spring Cloud Sleuth attaches ID to each request. It will assign same ID to all request with which we can track.
+
+Zipkin is used to centralised logs and we can see logs of each service on browser. Rabbit MQ is used to push the logs to the queue and zipkin reads logs from there.
+
+Spring Cloud Bus is used to refresh all URL's  with just 1 hit and pick up latest configuration.
+
+Hystrix is used to throw generic exception or set default values on exception when microserves goes down.
+				
+				
+				
+95 videos
+
+
+URL:
+http://localhost:8000/currency-exchange/from/USD/to/INR
+http://localhost:8100/currency-converter-feign/from/USD/to/INR/quantity/10
+http://localhost:8761/ - Eureka Naming server
+http://localhost:8765/CURRENCY-EXCHANGE-SERVICE/currency-exchange/from/USD/to/INR -- If we wannt to hit through api gateway then add property spring.cloud.gateway.discovery.locator.enabled=true in api gateway application.properties.
+http://localhost:8765/CURRENCY-CONVERSION-SERVICE/currency-converter-feign/from/USD/to/INR/quantity/10
+
+Troubleshooting guide
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/quick-start.md
+
+https://github.com/in28minutes/spring-microservices-v2/blob/main/04.docker/
+
+
+
+Docker:
+1) docker run --name repo alpine/git clone h
+ttps://github.com/docker/getting-started.git
+2) docker cp repo:/git/getting-started/ .cd 
+getting-started
+3) docker build -t docker101tutorial
+4) docker build -t docker101tutorial .docker
+ run -d -p 80:80 --name docker-tutorial docker101tutorial
+ 5) docker tag docker101tutorial mjishaq/dock
+er101tutorial
+
+4d0a61cc1ffaccf1045f116f93a04c6083508247bec680ff6ee509af6a3b37a1
+
+
+docker run -p 5000:5000 in28min/todo-rest-api-h2:1.0.0.RELEASE  -- will start container for this image.
+
+docker container run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE  -- will start container for this image.
+
+docker pause 4d0 - will pause the container
+docker unpause 4d0 - will unpause the container
+docker container inspect a4c0 -- get all container details.
+docker container ls -a -- list all images
+ docker container prune  --- remove all stopped containers.
+  docker container logs -f a4c  -- to get logs
+  docker container stop a4c -- stop running container take them to exited. will stop gracefully
+  docker container kill a4c --- will stop immediately.
+  
+  docker run -p 5000:5000 --restart=always in28min/todo-rest-api-h2:1.0.0.RELEASE  -- if you stop this service and when docker container or daemon is started this service will get started again. By default restart=no 
+  
+  docker events -- will give you what is happening in background.
+  
+  docker top a4c  -- will give you details about processes runnning for that service.
+  
+  docker status  -- will give all details of service. like memory cpu etc
+  
+  docker run -p 5000:5000 -m 512m  --cpu-quota 5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE  --- allocate memory and cpu 
+  
+  docker system df --- give all details like how many images/containers.
+  
+  docker-compose --version
+  
+  
+   kubectl create deployment hello-worl-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE  -- deploy the service
+   kubectl expose deployment hello-worl-rest-api --type=LoadBalancer --port=8080 -- to show it in browser
+   kubectl scale deployment hello-worl-rest-api --replicas=3 -- to bring 3 instances
+   kubectl delete pod hello-worl-rest-api-58333433-6219d   -- when you delete any instance still service will be up
+   kubectl autoscale deployment hello-worl-rest-api --max=10 --cpu-percent=70 -- autoscale when load is increased.
+   kubectl edit deployment hello-worl-rest-api  -- edit and minReadySeconds:  15 so when you are deploying new version older version should not go down but it should go down post new is launched.
+   
+   
+   ---- Kubernetes commands copied-----
+   docker run -p 8080:8080 in28min/hello-world-rest-api:0.0.1.RELEASE
+ 
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl delete pod hello-world-rest-api-58ff5dd898-62l9d
+kubectl autoscale deployment hello-world-rest-api --max=10 --cpu-percent=70
+kubectl edit deployment hello-world-rest-api #minReadySeconds: 15
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+ 
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-a --project solid-course-258105
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get componentstatuses
+kubectl get pods --all-namespaces
+ 
+kubectl get events
+kubectl get pods
+kubectl get replicaset
+kubectl get deployment
+kubectl get service
+ 
+kubectl get pods -o wide
+ 
+kubectl explain pods
+kubectl get pods -o wide
+ 
+kubectl describe pod hello-world-rest-api-58ff5dd898-9trh2
+ 
+kubectl get replicasets
+kubectl get replicaset
+ 
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl get pods
+kubectl get replicaset
+kubectl get events
+kubectl get events --sort.by=.metadata.creationTimestamp
+ 
+kubectl get rs
+kubectl get rs -o wide
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get rs -o wide
+kubectl get pods
+kubectl describe pod hello-world-rest-api-85995ddd5c-msjsm
+kubectl get events --sort-by=.metadata.creationTimestamp
+ 
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-n6c7l
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-8bhdt
+ 
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-c --project solid-course-258105
+docker login
+docker push in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
+docker push in28min/mmv2-currency-conversion-service:0.0.11-SNAPSHOT
+ 
+kubectl create deployment currency-exchange --image=in28min/mmv2-currency-exchange-service:0.0.11-SNAPSHOT
+kubectl expose deployment currency-exchange --type=LoadBalancer --port=8000
+kubectl get svc
+kubectl get services
+kubectl get pods
+kubectl get po
+kubectl get replicaset
+kubectl get rs
+kubectl get all
+ 
+kubectl create deployment currency-conversion --image=in28min/mmv2-currency-conversion-service:0.0.11-SNAPSHOT
+kubectl expose deployment currency-conversion --type=LoadBalancer --port=8100
+ 
+kubectl get svc --watch
+ 
+kubectl get deployments
+ 
+kubectl get deployment currency-exchange -o yaml >> deployment.yaml 
+kubectl get service currency-exchange -o yaml >> service.yaml 
+ 
+kubectl diff -f deployment.yaml
+kubectl apply -f deployment.yaml
+ 
+kubectl delete all -l app=currency-exchange
+kubectl delete all -l app=currency-conversion
+ 
+kubectl rollout history deployment currency-conversion
+kubectl rollout history deployment currency-exchange
+kubectl rollout undo deployment currency-exchange --to-revision=1
+ 
+kubectl logs currency-exchange-9fc6f979b-2gmn8
+kubectl logs -f currency-exchange-9fc6f979b-2gmn8 
+ 
+kubectl autoscale deployment currency-exchange --min=1 --max=3 --cpu-percent=5 
+kubectl get hpa
+ 
+kubectl top pod
+kubectl top nodes
+kubectl get hpa
+kubectl delete hpa currency-exchange
+ 
+kubectl create configmap currency-conversion --from-literal=CURRENCY_EXCHANGE_URI=http://currency-exchange
+kubectl get configmap
+ 
+kubectl get configmap currency-conversion -o yaml >> configmap.yaml
+ 
+watch -n 0.1 curl http://34.66.241.150:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
+ 
+docker push in28min/mmv2-currency-conversion-service:0.0.12-SNAPSHOT
+docker push in28min/mmv2-currency-exchange-service:0.0.12-SNAPSHOT
+-------------

@@ -1,0 +1,127 @@
+/ Java program to generate short url from integer id and  
+// integer id back from short url.  
+import java.util.*; 
+import java.lang.*; 
+import java.io.*; 
+  
+class GFG 
+{ 
+    // Function to generate a short url from integer ID  
+    static String idToShortURL(int n)  
+    {  
+        // Map to store 62 possible characters  
+        char map[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();  
+      
+        StringBuffer shorturl = new StringBuffer();  
+      
+        // Convert given integer id to a base 62 number  
+        while (n > 0)  
+        {  
+            // use above map to store actual character  
+            // in short url  
+            shorturl.append(map[n % 62]); 
+            n = n / 62;  
+        }  
+      
+        // Reverse shortURL to complete base conversion  
+        return shorturl.reverse().toString();  
+    }  
+      
+    // Function to get integer ID back from a short url  
+    static int shortURLtoID(String shortURL)  
+    {  
+        int id = 0; // initialize result  
+      
+        // A simple base conversion logic  
+        for (int i = 0; i < shortURL.length(); i++)  
+        {  
+            if ('a' <= shortURL.charAt(i) &&  
+                       shortURL.charAt(i) <= 'z')  
+            id = id * 62 + shortURL.charAt(i) - 'a';  
+            if ('A' <= shortURL.charAt(i) &&  
+                       shortURL.charAt(i) <= 'Z')  
+            id = id * 62 + shortURL.charAt(i) - 'A' + 26;  
+            if ('0' <= shortURL.charAt(i) &&  
+                       shortURL.charAt(i) <= '9')  
+            id = id * 62 + shortURL.charAt(i) - '0' + 52;  
+        }  
+        return id;  
+    }  
+      
+    // Driver Code 
+    public static void main (String[] args) throws IOException 
+    { 
+        int n = 12345;  
+        String shorturl = idToShortURL(n);  
+        System.out.println("Generated short url is " + shorturl);  
+        System.out.println("Id from url is " +  
+                            shortURLtoID(shorturl));  
+    } 
+} 
+
+
+
+
+public class UrlShortener {
+    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int    BASE     = ALPHABET.length();
+
+    public static String encode(int num) {
+        StringBuilder sb = new StringBuilder();
+        while ( num > 0 ) {
+            sb.append( ALPHABET.charAt( num % BASE ) );
+            num /= BASE;
+        }
+        return sb.reverse().toString();   
+    }
+
+    public static int decode(String str) {
+        int num = 0;
+        for ( int i = 0; i < str.length(); i++ )
+            num = num * BASE + ALPHABET.indexOf(str.charAt(i));
+        return num;
+    }   
+}
+  
+  
+  
+  import static org.testing.AssertJUnit.assertEquals ;
+
+public class TinyURL {
+	private static final String ALPHABET_MAP = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" ;
+	private static final int BASE = ALPHABET_MAP.length() ;
+
+	public static String encode ( int IndexNum ) {
+		StringBuilder sb = new StringBuilder() ;
+		
+		while ( IndexNum > 0 ) {
+			sb.append ( ALPHABET_MAP.charAt ( IndexNum % BASE ) ) ;
+			IndexNum /= BASE ;
+		}
+		return sb.reverse().toString() ;
+	}
+
+	public static int decode ( String str ) {
+		int Num = 0 ;
+
+		for ( int i = 0, len = str.length(); i < len; i++ ) {
+			Num = Num * BASE + ALPHABET_MAP.indexOf ( str.charAt(i) ) ;
+		}
+		return Num ;
+	}
+
+	public static void main ( String[] args ) {
+		//System.out.println ( "Encoding for 123 is " + encode(123) ) ;
+		//System.out.println ( "Decoding for b9 is " + decode ("b9" ) ) ;
+
+		assertEquals ( "b9", encode(123) ) ;
+		assertEquals ( 123, decode("b9") ) ; 
+	}
+}
+
+
+https://phoenixnap.com/kb/install-cassandra-on-windows Cascandra installation
+
+https://www.javaguides.net/2019/12/spring-boot-angular-mongodb-crud-example-tutorial.html
+
+https://www.javaguides.net/2019/12/spring-boot-mongodb-crud-example-tutorial.html
